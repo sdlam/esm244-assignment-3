@@ -1,0 +1,62 @@
+---
+title: "Assignment 3 Task 1"
+author: "Sarah Lam"
+date: "2/15/2022"
+output: html_document
+---
+
+```{r setup, include=FALSE, warning=FALSE, message=FALSE}
+knitr::opts_chunk$set(echo = TRUE, warning = FALSE, message = FALSE)
+
+library(tidyverse)
+library(here)
+library(janitor)
+library(ggfortify)
+```
+
+### Task 1 (individual): Principal components analysis (coder’s choice)
+
+For this task, we’ll provide a couple of datasets that you can use for PCA exploration, but you are also welcome to find/choose a different dataset to use. You only need to use one dataset to perform PCA, create a biplot, and interpret the results. Whichever dataset you choose, create a finalized HTML (knitted from .Rmd) that includes: 
+
+A useful descriptive introductory summary (3 - 4 sentences) that helps the audience understand the data (include a citation as necessary) and what you’ll be exploring. 
+
+```{r}
+#read in the data, clean it up, and filter for the variables that we want 
+nutrition <- read_csv(here("data", "usda_nutrients.csv")) %>% 
+  clean_names() %>% 
+  mutate(across(where(is.character), tolower)) %>% 
+  filter(food_group %in% c("dairy and egg products", "nut and seed products", "cereal grains and pasta", "fruits and fruit juices", "finfish and shellfish products")) #somewhat randomly chosen food groups
+```
+
+```{r}
+nutrition_pca <- nutrition %>%
+  select(energy_kcal:zinc_mg) %>%  #select for just numeric variables 
+  scale() %>% 
+  prcomp()
+```
+
+```{r}
+autoplot(nutrition_pca, 
+         data = nutrition, 
+         loadings = TRUE, 
+         colour = 'food_group', 
+         loadings.label = TRUE,
+         loadings.colour = 'black',
+         loadings.label.colour = 'black',
+         loadings.label.vjust = -.05) +
+  theme_minimal()
+```
+**Figure 1.** 
+ 
+```{r}
+screeplot(nutrition_pca, type = 'lines')
+screeplot(nutrition_pca, type = 'barplot')
+```
+ 
+### Summary 
+- 
+- 
+- 
+- 
+-
+A brief summary (nicely formatted and professionally written bulletpoints are fine) highlighting some major takeaways from your PCA that can be gleaned from the biplot (and screeplot, if included) 
