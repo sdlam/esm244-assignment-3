@@ -1,0 +1,34 @@
+---
+title: "Assignment 3 Task 2"
+author: "Sarah Lam"
+date: "2/15/2022"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+
+library(tidyverse)
+library(here)
+library()
+```
+
+Task 2: Agglomerative hierarchical clustering (submit html on GS)
+A useful descriptive introductory summary (3 - 4 sentences) that helps the audience understand the data (include a citation as necessary) and what you’ll be exploring
+For Task 2, use hierarchical clustering by complete linkage to create a dendrogram showing multivariate clustering for water chemistry by site.
+To perform hierarchical clustering by site, you’ll want to make a data frame that has a single summary row per site (e.g. based on means from all observations at that site), then calculate the Euclidean distance before performing complete linkage agglomerative hierarchical clustering. 
+
+Citation: Santa Barbara Coastal LTER and J. Melack. 2019. SBC LTER: Land: Stream chemistry in the Santa Barbara Coastal drainage area, ongoing since 2000 ver 16. Environmental Data Initiative. https://doi.org/10.6073/pasta/67a558a24ceed9a0a5bf5e46ab841174. 
+
+```{r}
+#read in the data 
+stream_chemistry <- read_csv(here("data", "sbc_lter_registered_stream_chemistry.csv"))
+```
+
+```{r}
+#creating a dendrogram
+
+```
+
+All of your organized and well-annotated code (with warnings/messages suppressed) you wrote to wrangle data then create the dendrogram, and to create a professional looking dendrogram that appears (with a caption) in your knitted HTML.  
+
