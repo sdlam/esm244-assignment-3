@@ -10,7 +10,7 @@ knitr::opts_chunk$set(echo = TRUE)
 
 library(tidyverse)
 library(here)
-library()
+library(janitor)
 ```
 
 Task 2: Agglomerative hierarchical clustering (submit html on GS)
@@ -22,25 +22,33 @@ Citation: Santa Barbara Coastal LTER and J. Melack. 2019. SBC LTER: Land: Stream
 
 ```{r}
 #read in the data 
-stream_chemistry <- read_csv(here("data", "sbc_lter_registered_stream_chemistry.csv"))
+stream_chemistry <- read_csv(here("data", "sbc_lter_registered_stream_chemistry.csv")) %>% 
+  clean_names() %>% 
+  na_if(-999.0) %>% 
+  drop_na()
+colnames(stream_chemistry) <- gsub("_u_m", "", colnames(stream_chemistry))
+
+stream_scale <- stream_chemistry %>%
+  select(nh4:spec_cond_u_spercm) %>% 
+  scale()
 ```
 
 ```{r}
 #creating a dendrogram
-stream_dist <- dist(stream_chemistry, method = 'euclidean') 
+stream_dist <- dist(stream_scale, method = 'euclidean') 
    ### also look at upper and diag arguments
  
 ### Hierarchical clustering (complete linkage)
-stream_hc_complete <- hclust(peng_dist, method = "complete")
+stream_hc_complete <- hclust(stream_dist, method = "ward.D")
  
 ### Plot it (base plot):
-plot(peng_hc_complete, cex = 0.6, hang = -1)
+plot(stream_hc_complete, cex = 0.6, hang = -1)
 ```
 
 ```{r}
 ### use cutree to slice it into three clusters
-peng_cut_hc <- cutree(peng_hc_complete, 3)
-table(peng_cut_hc, penguins_complete$species)
+stream_cut_hc <- cutree(stream_hc_complete, 5)
+table(stream_cut_hc, stream_chemistry$site_code)
 ```
 
 All of your organized and well-annotated code (with warnings/messages suppressed) you wrote to wrangle data then create the dendrogram, and to create a professional looking dendrogram that appears (with a caption) in your knitted HTML.  
