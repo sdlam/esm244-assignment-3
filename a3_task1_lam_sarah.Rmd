@@ -46,6 +46,7 @@ autoplot(nutrition_pca,
          loadings.label.vjust = -.05) +
   theme_minimal()
 ```
+
 **Figure 1.** 
  
 ```{r}
