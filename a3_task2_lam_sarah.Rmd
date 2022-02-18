@@ -27,7 +27,20 @@ stream_chemistry <- read_csv(here("data", "sbc_lter_registered_stream_chemistry.
 
 ```{r}
 #creating a dendrogram
+peng_dist <- dist(penguins_scale, method = 'euclidean') 
+   ### also look at upper and diag arguments
+ 
+### Hierarchical clustering (complete linkage)
+peng_hc_complete <- hclust(peng_dist, method = "complete")
+ 
+### Plot it (base plot):
+plot(peng_hc_complete, cex = 0.6, hang = -1)
+```
 
+```{r}
+### use cutree to slice it into three clusters
+peng_cut_hc <- cutree(peng_hc_complete, 3)
+table(peng_cut_hc, penguins_complete$species)
 ```
 
 All of your organized and well-annotated code (with warnings/messages suppressed) you wrote to wrangle data then create the dendrogram, and to create a professional looking dendrogram that appears (with a caption) in your knitted HTML.  
