@@ -27,11 +27,11 @@ stream_chemistry <- read_csv(here("data", "sbc_lter_registered_stream_chemistry.
 
 ```{r}
 #creating a dendrogram
-peng_dist <- dist(penguins_scale, method = 'euclidean') 
+stream_dist <- dist(stream_chemistry, method = 'euclidean') 
    ### also look at upper and diag arguments
  
 ### Hierarchical clustering (complete linkage)
-peng_hc_complete <- hclust(peng_dist, method = "complete")
+stream_hc_complete <- hclust(peng_dist, method = "complete")
  
 ### Plot it (base plot):
 plot(peng_hc_complete, cex = 0.6, hang = -1)
