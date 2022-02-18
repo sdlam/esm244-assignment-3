@@ -34,6 +34,8 @@ stream_scale <- stream_chemistry %>%
 ```
 
 ```{r}
+number_est <- NbClust(penguins_scale, min.nc = 2, max.nc = 10, method = 'kmeans')
+
 #creating a dendrogram
 stream_dist <- dist(stream_scale, method = 'euclidean') 
    ### also look at upper and diag arguments
