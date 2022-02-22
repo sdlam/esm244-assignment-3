@@ -14,11 +14,11 @@ library(janitor)
 library(ggfortify)
 ```
 
-### Task 1 (individual): Principal components analysis (coder’s choice)
+### Overview 
 
-For this task, we’ll provide a couple of datasets that you can use for PCA exploration, but you are also welcome to find/choose a different dataset to use. You only need to use one dataset to perform PCA, create a biplot, and interpret the results. Whichever dataset you choose, create a finalized HTML (knitted from .Rmd) that includes: 
+This code utilizes principal components analysis to explore nutrition data for various food groups. The data is taken from the USDA FoodData Central website and includes essential nutrient and vitamin concentrations for various food groups. For the sake of this PCA analysis nine food groups were chosen somewhat randomly in an attempt to achieve a balanced variety across food groups and the nutrients selected were calories, protein, fat, carbs, sugars, and fiber.
 
-A useful descriptive introductory summary (3 - 4 sentences) that helps the audience understand the data (include a citation as necessary) and what you’ll be exploring. 
+Citation: U.S. Department of Agriculture, Agricultural Research Service. FoodData Central, 2019. fdc.nal.usda.gov.
 
 ```{r}
 #read in the data, clean it up, and filter for the variables that we want 
@@ -28,9 +28,10 @@ nutrition <- read_csv(here("data", "usda_nutrients.csv")) %>%
   filter(food_group %in% c("dairy and egg products", "nut and seed products", "cereal grains and pasta", "fruits and fruit juices", "finfish and shellfish products")) #somewhat randomly chosen food groups
 ```
 
+
 ```{r}
 nutrition_pca <- nutrition %>%
-  select(energy_kcal:zinc_mg) %>%  #select for just numeric variables 
+  select(energy_kcal:fiber_g) %>%  #select for just numeric variables 
   scale() %>% 
   prcomp()
 ```
@@ -44,20 +45,16 @@ autoplot(nutrition_pca,
          loadings.colour = 'black',
          loadings.label.colour = 'black',
          loadings.label.vjust = -.05) +
-  theme_minimal()
+  scale_color_manual(values = c('yellow', 'purple', 'orange', 'cyan', 'coral', 'brown')) +
+  theme_minimal() +
+  labs(title = "PCA Analysis of Nutrition Content of Common Food Groups", 
+       colour = "Food Group")
 ```
 
-**Figure 1.** 
- 
-```{r}
-screeplot(nutrition_pca, type = 'lines')
-screeplot(nutrition_pca, type = 'barplot')
-```
+**Figure 1.** This figure shows potential positive and negative correlations for the nutrient contents of protein (g), fat (g), kcals, fiber (g), carbohydrates (g), and sugar (g) for the basic food groups grains, dairy and eggs, fish, fruits, and nuts and seeds. 
  
 ### Summary 
-- 
-- 
-- 
-- 
--
-A brief summary (nicely formatted and professionally written bulletpoints are fine) highlighting some major takeaways from your PCA that can be gleaned from the biplot (and screeplot, if included) 
+- Based on this figure, we can see that protein and sugar content are somewhat negatively correlated. 
+- Fat and kcal content are potentially positively correlated. 
+- Sugar and kcal contents appear to be unrelated. 
+

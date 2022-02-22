@@ -25,20 +25,34 @@ Citation: Santa Barbara Coastal LTER and J. Melack. 2019. SBC LTER: Land: Stream
 stream_chemistry <- read_csv(here("data", "sbc_lter_registered_stream_chemistry.csv")) %>% 
   clean_names() %>% 
   na_if(-999.0) %>% 
-  drop_na() %>% 
   group_by(site_code)
 colnames(stream_chemistry) <- gsub("_u_m", "", colnames(stream_chemistry))
 
 stream_sum <- stream_chemistry %>% #summarize for scale function
-  summarize(nh4 = mean(nh4),
-            no3 = mean(no3), 
-            po4 = mean(po4), 
-            tdn = mean(tdn), 
-            tdp = mean(tdp), 
-            tpc = mean(tpc), 
-            tpp = mean(tpp), 
+  summarize(nh4 = mean(nh4, na.rm = TRUE),
+            no3 = mean(no3, na.rm = TRUE), 
+            po4 = mean(po4, na.rm = TRUE), 
+            tdn = mean(tdn, na.rm = TRUE), 
+            tdp = mean(tdp, na.rm = TRUE), 
+            tpc = mean(tpc, na.rm = TRUE), 
+            tpn = mean(tpn, na.rm = TRUE),
+            tpp = mean(tpp, na.rm = TRUE), 
             tss_mgper_liter = mean(tss_mgper_liter), 
-            spec_cond_u_spercm = mean(spec_cond_u_spercm))
+            spec_cond_u_spercm = mean(spec_cond_u_spercm)) %>% 
+  mutate(site_code = case_when(
+           site_code %in% c('AB00') ~ 'Arroyo Burro',
+          site_code %in% c('AT07') ~ 'Atascadero Creek',
+          site_code %in% c('BC02') ~ 'Bell Canyon Creek',
+          site_code %in% c('DV01') ~ 'Devereaux Creek',
+          site_code %in% c('GV01') ~ 'Gaviota Creek',
+          site_code %in% c('HO00') ~ 'Arroyo Hondo Creek',
+          site_code %in% c('MC00') ~ 'Mission Creek',
+          site_code %in% c('ON02') ~ 'San Onofre Creek',
+          site_code %in% c('RG01') ~ 'Refugio Creek',
+          site_code %in% c('RS02') ~ 'Rattlesnake Creek',
+          site_code %in% c('TO02') ~ 'Tecolote Creek',
+          site_code %in% c('SP02') ~ 'San Pedro Creek',
+          site_code %in% c('MC06') ~ 'Mission Creek at Rocky Nook'))
 
 stream_scale <- stream_sum %>%
   select(nh4:spec_cond_u_spercm) %>% 
@@ -66,6 +80,9 @@ ggdendrogram(stream_hc_complete, rotate = TRUE, color = "darkcyan") +
 **Figure 1.** This figure compares stream chemistry averages across six Santa Barbara Long Term Ecological Research (LTER) sites using hierarchical clustering. 
 
 ### Summary 
-- Sites MC06 and MC00 are the most similar sites, while ON02 had the least close in euclidean distance. 
-- The even distance between each cluster may indicate that none of the sites are significantly closer to to each other and we should use 6 clusters for further analysis. 
+- Devereaux Creek has the furthest euclidean distance on the dendrogram indicating that it's stream chemistry may differ significantly from the other creeks. 
+- The dendrogram does not suggest a clear or obvious number of clusters for the stream chemistry data, based on the dendrogram I would suggest using 4-6 clusters in further analysis. 
 - Other methods of clustering should be explored to see if another method is better than complete hierarchical.
+
+
+
